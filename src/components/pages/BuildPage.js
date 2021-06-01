@@ -4,6 +4,7 @@ import Modal from 'react-bootstrap/Modal';
 import queryString from 'query-string';
 import { withRouter } from 'react-router-dom';
 import { BuildRequests, ScreenshotRequests } from 'angles-javascript-client';
+import { jsPDF as JsPDF } from 'jspdf';
 import BuildResultsPieChart from '../charts/BuildResultsPieChart';
 import BuildFeaturePieChart from '../charts/BuildFeaturePieChart';
 import SuiteTable from '../tables/SuiteTable';
@@ -87,6 +88,13 @@ class BuildPage extends Component {
     this.setState({ filteredSuites, filterStates });
   }
 
+  exportBuildPage = () => {
+    const doc = new JsPDF();
+
+    doc.fromHTML(document.documentElement.innerHTML, 15, 15);
+    doc.save('Test_Run.pdf');
+  }
+
   render() {
     const {
       currentBuild,
@@ -121,6 +129,9 @@ class BuildPage extends Component {
       <div>
         <h1>
           <span>{ `Build: ${currentBuild.name}`}</span>
+          <p>
+            <button type="button" className="angles-button" onClick={this.exportBuildPage}>Export Test Run</button>
+          </p>
         </h1>
         <BuildSummary build={currentBuild} screenshots={screenshots} openModal={this.openModal} />
         <BuildArtifacts build={currentBuild} />

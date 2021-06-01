@@ -236,3 +236,14 @@
   padding-left: 1em;
   cursor: default;
 }
+
+.angles-button {
+  background-color: #C19663;
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 12px;
+}
