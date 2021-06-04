@@ -4,7 +4,7 @@ import Modal from 'react-bootstrap/Modal';
 import queryString from 'query-string';
 import { withRouter } from 'react-router-dom';
 import { BuildRequests, ScreenshotRequests } from 'angles-javascript-client';
-import { jsPDF as JsPDF } from 'jspdf';
+import html2pdf from 'html2pdf.js';
 import BuildResultsPieChart from '../charts/BuildResultsPieChart';
 import BuildFeaturePieChart from '../charts/BuildFeaturePieChart';
 import SuiteTable from '../tables/SuiteTable';
@@ -88,11 +88,16 @@ class BuildPage extends Component {
     this.setState({ filteredSuites, filterStates });
   }
 
-  exportBuildPage = () => {
-    const doc = new JsPDF();
-
-    doc.fromHTML(document.documentElement.innerHTML, 15, 15);
-    doc.save('Test_Run.pdf');
+  exportBuildPage = async () => {
+    const element = document.documentElement;
+    const opt = {
+      margin: 1,
+      filename: `test_run_${new Date().toDateString().replaceAll(' ', '_')}.pdf`,
+      image: { type: 'jpeg', quality: 0.98 },
+      html2canvas: { scale: 2 },
+      jsPDF: { unit: 'cm', format: [75, 45] },
+    };
+    html2pdf().from(element).set(opt).save();
   }
 
   render() {
@@ -129,10 +134,10 @@ class BuildPage extends Component {
       <div>
         <h1>
           <span>{ `Build: ${currentBuild.name}`}</span>
-          <p>
-            <button type="button" className="angles-button" onClick={this.exportBuildPage}>Export Test Run</button>
-          </p>
         </h1>
+        <p>
+          <button type="button" className="angles-button" onClick={this.exportBuildPage}>Export Test Run</button>
+        </p>
         <BuildSummary build={currentBuild} screenshots={screenshots} openModal={this.openModal} />
         <BuildArtifacts build={currentBuild} />
         <div className="graphContainerParent">
