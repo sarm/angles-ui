@@ -278,5 +278,16 @@
   text-align: center;
   text-decoration: none;
   display: inline-block;
-  font-size: 12px;
+  float: right;
+  color: blue;
+}
+
+.export-icon {
+  display: inline-block;
+  float: right;
+  color: blue;
+}
+
+.headingContainer h1 {
+  display: inline-block;
 }

@@ -132,12 +132,14 @@ class BuildPage extends Component {
     }
     return (
       <div>
-        <h1>
-          <span>{ `Build: ${currentBuild.name}`}</span>
-        </h1>
-        <p>
-          <button type="button" className="angles-button" onClick={this.exportBuildPage}>Export Test Run</button>
-        </p>
+        <div className="headingContainer">
+          <h1>
+            <span>{ `Build: ${currentBuild.name}`}</span>
+          </h1>
+          <span className="export-icon" onClick={this.exportBuildPage}>
+            <i className="far fa-file-pdf fa-2x" title="Export to PDF" />
+          </span>
+        </div>
         <BuildSummary build={currentBuild} screenshots={screenshots} openModal={this.openModal} />
         <BuildArtifacts build={currentBuild} />
         <div className="graphContainerParent">
