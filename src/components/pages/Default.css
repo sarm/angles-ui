@@ -237,13 +237,12 @@
   cursor: default;
 }
 
-.angles-button {
-  background-color: #C19663;
-  border: none;
-  color: white;
-  padding: 15px 32px;
-  text-align: center;
-  text-decoration: none;
+.export-icon {
   display: inline-block;
-  font-size: 12px;
+  float: right;
+  color: blue;
+}
+
+.headingContainer h1 {
+  display: inline-block;
 }
