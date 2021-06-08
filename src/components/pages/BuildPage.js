@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import Modal from 'react-bootstrap/Modal';
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
+import Tooltip from 'react-bootstrap/Tooltip';
 import queryString from 'query-string';
 import { withRouter } from 'react-router-dom';
 import { BuildRequests, ScreenshotRequests } from 'angles-javascript-client';
@@ -90,9 +92,10 @@ class BuildPage extends Component {
 
   exportBuildPage = async () => {
     const element = document.documentElement;
+    const { query } = this.state;
     const opt = {
       margin: 1,
-      filename: `test_run_${new Date().toDateString().replaceAll(' ', '_')}.pdf`,
+      filename: `test_run_${query.buildId}.pdf`,
       image: { type: 'jpeg', quality: 0.98 },
       html2canvas: { scale: 2 },
       jsPDF: { unit: 'cm', format: [75, 45] },
@@ -136,9 +139,11 @@ class BuildPage extends Component {
           <h1>
             <span>{ `Build: ${currentBuild.name}`}</span>
           </h1>
-          <span className="export-icon" onClick={this.exportBuildPage}>
-            <i className="far fa-file-pdf fa-2x" title="Export to PDF" />
-          </span>
+          <OverlayTrigger overlay={<Tooltip id="tooltip-disabled">Download build to PDF</Tooltip>}>
+            <span className="export-icon" onClick={this.exportBuildPage}>
+              <i className="far fa-file-pdf fa-2x" />
+            </span>
+          </OverlayTrigger>
         </div>
         <BuildSummary build={currentBuild} screenshots={screenshots} openModal={this.openModal} />
         <BuildArtifacts build={currentBuild} />
