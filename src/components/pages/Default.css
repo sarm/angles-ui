@@ -240,7 +240,12 @@
 .export-icon {
   display: inline-block;
   float: right;
-  color: blue;
+  color: #d39e00;
+  cursor: pointer;
+}
+
+.export-icon :hover {
+  color: #ffc20b;
 }
 
 .headingContainer h1 {
