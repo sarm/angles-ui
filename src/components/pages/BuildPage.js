@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import Modal from 'react-bootstrap/Modal';
+import ReactDOMServer from 'react-dom/server';
 import queryString from 'query-string';
 import { withRouter } from 'react-router-dom';
 import { BuildRequests, ScreenshotRequests } from 'angles-javascript-client';
-import html2pdf from 'html2pdf.js';
+import { ServerStyleSheet } from 'styled-components';
 import BuildResultsPieChart from '../charts/BuildResultsPieChart';
 import BuildFeaturePieChart from '../charts/BuildFeaturePieChart';
 import SuiteTable from '../tables/SuiteTable';
@@ -12,7 +13,9 @@ import BuildSummary from '../tables/BuildSummary';
 import BuildArtifacts from '../tables/BuildArtifacts';
 import '../charts/Charts.css';
 import './Default.css';
+import '../tables/Tables.css';
 import ScreenshotView from './ScreenshotView';
+import BuildReport from '../report/BuildReport';
 
 class BuildPage extends Component {
   constructor(props) {
@@ -89,16 +92,22 @@ class BuildPage extends Component {
   }
 
   exportBuildPage = async () => {
-    const element = document.documentElement;
-    const { query } = this.state;
-    const opt = {
-      margin: 1,
-      filename: `test_run_${query.buildId}.pdf`,
-      image: { type: 'jpeg', quality: 0.75 },
-      html2canvas: { scale: 1 },
-      jsPDF: { unit: 'cm', format: [75, 55] },
-    };
-    html2pdf().from(element).set(opt).save();
+    const { currentBuild, screenshots, query } = this.state;
+    const page = <BuildReport currentBuild={currentBuild} screenshots={screenshots} />;
+    const sheet = new ServerStyleSheet();
+    try {
+      const htmlString = ReactDOMServer.renderToString(sheet.collectStyles(page));
+      const hiddenElement = document.createElement('a');
+      hiddenElement.href = `data:attachment/text, ${encodeURI(htmlString)}`;
+      hiddenElement.target = '_blank';
+      hiddenElement.download = `test_run_${query.buildId}.html`;
+      hiddenElement.click();
+    } catch (error) {
+      // handle error
+      console.error(error);
+    } finally {
+      sheet.seal();
+    }
   }
 
   render() {
@@ -137,8 +146,8 @@ class BuildPage extends Component {
           <h1>
             <span>{ `Build: ${currentBuild.name}`}</span>
           </h1>
-          <span className="export-icon" onClick={this.exportBuildPage}>
-            <i className="far fa-file-pdf fa-2x" />
+          <span className="download-icon" onClick={this.exportBuildPage}>
+            <i className="fas fa-download fa-2x" />
           </span>
         </div>
         <BuildSummary build={currentBuild} screenshots={screenshots} openModal={this.openModal} />
@@ -157,6 +166,7 @@ class BuildPage extends Component {
                   suite={suite}
                   screenshots={screenshots}
                   openModal={this.openModal}
+                  expandTests
                 />
               ) : null
             ))
