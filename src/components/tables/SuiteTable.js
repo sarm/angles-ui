@@ -8,9 +8,15 @@ import './Tables.css';
 class SuiteTable extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      executionStates: this.getStatesDefault(false),
-    };
+    if (props.expandTests !== undefined) {
+      this.state = {
+        executionStates: this.getStatesDefault(props.expandTests),
+      };
+    } else {
+      this.state = {
+        executionStates: this.getStatesDefault(false),
+      };
+    }
   }
 
   sum = (result) => {

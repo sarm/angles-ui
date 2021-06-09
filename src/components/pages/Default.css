@@ -282,14 +282,14 @@
   color: blue;
 }
 
-.export-icon {
+.download-icon {
   display: inline-block;
   float: right;
   color: #d39e00;
   cursor: pointer;
 }
 
-.export-icon :hover {
+.download-icon :hover {
   color: #ffc20b;
 }
 
